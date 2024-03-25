@@ -1,8 +1,10 @@
 # laravel-db-connection-resolver
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/usmonaliyev/laravel-db-connection-resolver.svg?style=flat-square)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
-[![Total Downloads](https://img.shields.io/packagist/dt/usmonaliyev/laravel-db-connection-resolver.svg?style=flat-square)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/usmonaliyev/laravel-db-connection-resolver/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/usmonaliyev/laravel-db-connection-resolver/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Latest Stable Version](http://poser.pugx.org/usmonaliyev/laravel-db-connection-resolver/v)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
+[![Total Downloads](http://poser.pugx.org/usmonaliyev/laravel-db-connection-resolver/downloads)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
+[![Latest Unstable Version](http://poser.pugx.org/usmonaliyev/laravel-db-connection-resolver/v/unstable)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
+[![License](http://poser.pugx.org/usmonaliyev/laravel-db-connection-resolver/license)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
+[![PHP Version Require](http://poser.pugx.org/usmonaliyev/laravel-db-connection-resolver/require/php)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
 
 ## Installation
 
