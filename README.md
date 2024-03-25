@@ -1,19 +1,8 @@
-# This is my package laravel-db-connection-resolver
+# laravel-db-connection-resolver
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/usmonaliyev/laravel-db-connection-resolver.svg?style=flat-square)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/usmonaliyev/laravel-db-connection-resolver/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/usmonaliyev/laravel-db-connection-resolver/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/usmonaliyev/laravel-db-connection-resolver/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/usmonaliyev/laravel-db-connection-resolver/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/usmonaliyev/laravel-db-connection-resolver.svg?style=flat-square)](https://packagist.org/packages/usmonaliyev/laravel-db-connection-resolver)
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-db-connection-resolver.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-db-connection-resolver)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/usmonaliyev/laravel-db-connection-resolver/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/usmonaliyev/laravel-db-connection-resolver/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 
 ## Installation
 
@@ -23,62 +12,80 @@ You can install the package via composer:
 composer require usmonaliyev/laravel-db-connection-resolver
 ```
 
-You can publish and run the migrations with:
+You can publish the config and migration files with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-db-connection-resolver-migrations"
+php artisan vendor:publish --provider="Usmonaliyev\DbConnectionResolver\DbConnectionResolverServiceProvider"
+```
+
+You can run migrations with:
+
+```bash
 php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-db-connection-resolver-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-db-connection-resolver-views"
 ```
 
 ## Usage
 
-```php
-$dbConnectionResolver = new Usmonaliyev\DbConnectionResolver();
-echo $dbConnectionResolver->echoPhrase('Hello, usmonaliyev!');
-```
-
-## Testing
+Add database connection to your `config/database.php`:
 
 ```bash
-composer test
+'connections' => [
+    ...
+    'pgsql' => [
+        'driver' => 'pgsql',
+        'url' => env('DATABASE_URL'),
+        'host' => env('DB_HOST', '127.0.0.1'),
+        'port' => env('DB_PORT', '5432'),
+        'database' => env('DB_DATABASE', 'forge'),
+        'username' => env('DB_USERNAME', 'forge'),
+        'password' => env('DB_PASSWORD', ''),
+        ...
+    ],
+    'foo' => [
+      ...
+    ],
+    'bar' => [
+        ...
+    ]
+]
 ```
 
-## Changelog
+You need to implement `resolveConnectionName` function into your `app/Models/User.php` file.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+Or add `Usmonaliyev\DbConnectionResolver\Traits\ConnectionResolver` trait your User class. 
 
-## Contributing
+```bash
+<?php
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+namespace App\Models;
 
-## Security Vulnerabilities
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Usmonaliyev\DbConnectionResolver\Traits\ConnectionResolver;
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+class User extends Authenticatable
+{
+    use ConnectionResolver, HasFactory, HasApiTokens;
+    
+    ...
+```
 
-## Credits
+To resolve database connection while accepting request, assign middleware to your routes.
 
-- [Temur Usmonaliyev](https://github.com/Temur5319436)
-- [All Contributors](../../contributors)
+```bash
+use Usmonaliyev\DbConnectionResolver\Middleware\ConnectionResolverMiddleware; 
+ 
+Route::middleware([ConnectionResolverMiddleware::class])->group(function () {
+    
+    Route::get('/', function () {
+        //
+    });
+});
+```
+
+[Assigning middleware to routes](https://laravel.com/docs/8.x/middleware#assigning-middleware-to-routes)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License ([MIT](LICENSE.md)).
